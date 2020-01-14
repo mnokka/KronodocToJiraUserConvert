@@ -17,6 +17,7 @@ from author import DoJIRAStuff
 import openpyxl 
 from collections import defaultdict
 import re
+from pprint import pprint
 
 start = time.clock()
 __version__ = u"0.9.KRONODOC" 
@@ -118,8 +119,48 @@ def main():
     ####################################################
     user="mika"
     
-    result=jira.search_users(user, startAt=0, maxResults=50, includeActive=True, includeInactive=False)
+    result=jira.search_users(user, startAt=0, maxResults=50, includeActive=True, includeInactive=False) #returns dictionary
     
+    # THIS WORKS
+    print "-------------------ddddddddddddddddd------"
+    for user in result:
+        logging.debug (" key:{0}".format(user.displayName))
+    print "-------------------ddddddddddddddddd------"
+    
+    
+    print 
+    logging.debug ("eka:{0}".format(result[0]))
+    logging.debug ("toka:{0}".format(result[1]))
+
+
+    print "-------------------------"
+    pprint(vars(result))
+    pprint(result)
+    print "-------------------------------"
+    
+    print "-------------------------------"
+    #iterable=result.keys()
+    iterator=iter(result)
+    x=next(iterator)
+    print (x)
+    x=next(iterator)
+    print (x)
+    
+    print "-----------vvvvvvvvvvvvvvvvvv--------------------"
+    
+    temp=vars(result)
+    for item in temp:
+        print (item, ':',temp[item])
+    
+    print "-----------vvvvvvvvvvvvvvvvvv--------------------"
+    
+    #for key,value in result.iteritems():
+    
+        #logging.debug ("key:{0}  value{1}".format(key,value))
+    
+    #logging.debug ("dict:{0}".format(dict['name']))
+    
+    #logging.debug ("AS A STR :{0}".format(str(result)))
     
     logging.debug ("result:{0}".format(result))
     
