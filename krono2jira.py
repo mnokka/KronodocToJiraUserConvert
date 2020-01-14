@@ -1,7 +1,6 @@
-# skipped Pandas and using tradional excel reading lib: import openpyxl 
-#
-# Jira Exp/Imp used to export excel with all field information
-# This utility ut use excel info to move issue data (fields) to another project in another Jira
+# Uses excel with Kronodoc exported Jira data
+# Changes perosn name to Jira useraccount (or if not exists , uses default jira account)
+# Idea is to make excel Jira import to possible
 # 
 
 
@@ -20,7 +19,7 @@ from collections import defaultdict
 import re
 
 start = time.clock()
-__version__ = u"0.9.RISKS" 
+__version__ = u"0.9.KRONODOC" 
 
 
 
@@ -102,8 +101,6 @@ def main():
     PSWD= args.password or ''
     USER= args.user or ''
     LINKS=args.links or ''
-    #RENAME= args.rename or ''
-    #ASCII=args.ascii or ''
     
     # quick old-school way to check needed parameters
     if (JIRASERVICE=='' or PSWD=='' or USER==''  or excelfilepath=='' or JIRAPROJECT=='' or filename==''):
@@ -111,10 +108,27 @@ def main():
         print "args: {0}".format(args)
         sys.exit(2)
 
-    
+    # python krono2jira.py -s http://localhost:8080 -u mika.nokka@ambientia.fi -w kissa -q . -n kissa -p kissa
+
     
     Authenticate(JIRASERVICE,PSWD,USER)
     jira=DoJIRAStuff(USER,PSWD,JIRASERVICE)
+    
+    
+    ####################################################
+    user="mika"
+    
+    result=jira.search_users(user, startAt=0, maxResults=50, includeActive=True, includeInactive=False)
+    
+    
+    logging.debug ("result:{0}".format(result))
+    
+    
+    
+    #############################################################
+    print "EXITING NOW!!"
+    sys.exit(5)
+    
     
     excel=excelfilepath+"/"+filename
     logging.debug ("Excel file:{0}".format(excel))
