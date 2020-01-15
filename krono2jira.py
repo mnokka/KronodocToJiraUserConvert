@@ -18,6 +18,7 @@ import openpyxl
 from collections import defaultdict
 import re
 from pprint import pprint
+from dns.name import empty
 
 start = time.clock()
 __version__ = u"0.9.KRONODOC" 
@@ -115,56 +116,20 @@ def main():
     Authenticate(JIRASERVICE,PSWD,USER)
     jira=DoJIRAStuff(USER,PSWD,JIRASERVICE)
     
+    ###############################################################################
     
-    ####################################################
-    user="mika"
+    #found example
+    user="nokka, mika"
+    account=CheckExcelName(jira,user)
     
-    result=jira.search_users(user, startAt=0, maxResults=50, includeActive=True, includeInactive=False) #returns dictionary
+    #not found example
+    #user="noskka, mikfa"
+    #account=CheckExcelName(jira,user)
     
-    # THIS WORKS
-    print "-------------------ddddddddddddddddd------"
-    for user in result:
-        logging.debug (" key:{0}".format(user.displayName))
-    print "-------------------ddddddddddddddddd------"
-    
-    
-    print 
-    logging.debug ("eka:{0}".format(result[0]))
-    logging.debug ("toka:{0}".format(result[1]))
-
-
-    print "-------------------------"
-    pprint(vars(result))
-    pprint(result)
-    print "-------------------------------"
-    
-    print "-------------------------------"
-    #iterable=result.keys()
-    iterator=iter(result)
-    x=next(iterator)
-    print (x)
-    x=next(iterator)
-    print (x)
-    
-    print "-----------vvvvvvvvvvvvvvvvvv--------------------"
-    
-    temp=vars(result)
-    for item in temp:
-        print (item, ':',temp[item])
-    
-    print "-----------vvvvvvvvvvvvvvvvvv--------------------"
-    
-    #for key,value in result.iteritems():
-    
-        #logging.debug ("key:{0}  value{1}".format(key,value))
-    
-    #logging.debug ("dict:{0}".format(dict['name']))
-    
-    #logging.debug ("AS A STR :{0}".format(str(result)))
-    
-    logging.debug ("result:{0}".format(result))
-    
-    
+    if (account != "NOT EXIST"):
+        logging.debug("User:{0} ---> Jira Account:{1}".format(user,account))
+    else:
+        logging.debug("User:{0} ---> NO Jira account".format(user,account))
     
     #############################################################
     print "EXITING NOW!!"
@@ -629,7 +594,47 @@ def CreateRiskIssue(jira,JIRAPROJECT,SUMMARY,ISSUE_TYPE,PRIORITY,STATUS,USERNAME
         print("Failed to create JIRA object or transit problem, error: %s" % e)
         sys.exit(1)
     return new_issue   
+
+
+
+
+##################################################################################33    
+def CheckExcelName(jira,user):
+
+   
+    result=jira.search_users(user, startAt=0, maxResults=50, includeActive=True, includeInactive=False) #returns dictionary
+    account ="NOT EXIST"
+    # THIS WORKS
+    print "----------------------------------------------------"
     
+    if not result:
+        logging.debug ("NO JIRA account MATCH for name:{0}".format(user))
+        return (account)
+    else:
+        logging.debug ("Found matches for excel name:    {0}    --> checking now....".format(user))
+    
+    for user in result:
+        #logging.debug ("DisplayName:{0}".format(user.displayName))
+        #logging.debug ("Key:{0}".format(user.key))
+    
+        regex = r"(.*)(,)(.*)"   # Kehveli, Kalle  is username format in Jira
+        match = re.search(regex, user.displayName)
+                
+        if (match):
+            firstname=match.group(3)
+            lastname=match.group(1)
+            account=user.key
+            logging.debug ("MATCH FOUND!!   Firstname:{0}   Secondname:{1}".format(firstname,lastname))
+            logging.debug ("Has Jira user account: {0}".format(account))
+            return account
+        #else:
+            #print "no match"
+    print "----------------------------------------------------"
+    
+    
+    
+    
+
     
 if __name__ == '__main__':
     main()
