@@ -66,15 +66,11 @@ def main():
     parser = argparse.ArgumentParser(usage="""
     {1}    Version:{0}     -  mika.nokka1@gmail.com 
     
-    USAGE:
-    -filepath  | -p <Path to Excel file directory>
-    -filename   | -n <Excel filename>
-    TODO ADD DESCR
-    PLEASE SEE THE CODE
+
 
     """.format(__version__,sys.argv[0]))
 
-    #parser.add_argument('-f','--filepath', help='<Path to attachment directory>')
+
     parser.add_argument('-q','--excelfilepath', help='<Path to excel directory>')
     parser.add_argument('-n','--filename', help='<Issues excel filename>')
     
@@ -83,10 +79,8 @@ def main():
     parser.add_argument('-w','--password', help='<JIRA password>')
     parser.add_argument('-u','--user', help='<JIRA username>')
     parser.add_argument('-s','--service', help='<JIRA service, like https://my.jira.com>')
-    parser.add_argument('-l','--links', help='<Target Jira project ID to which these issues to be linked, if link info (linked issue summary) excel>') #add issue links to generated issues (target "into" linked issues must be allready in target jira)
-    parser.add_argument('-p','--project', help='<Target JIRA project ID to be used>')
-    #parser.add_argument('-z','--rename', help='<rename files>') #adhoc operation activation
-    #parser.add_argument('-x','--ascii', help='<ascii file names>') #adhoc operation activation
+    
+
         
     args = parser.parse_args()
     
@@ -99,20 +93,16 @@ def main():
     filename = args.filename or ''
     
     JIRASERVICE = args.service or ''
-    JIRAPROJECT = args.project or ''
     PSWD= args.password or ''
     USER= args.user or ''
-    LINKS=args.links or ''
     
     # quick old-school way to check needed parameters
-    if (JIRASERVICE=='' or PSWD=='' or USER==''  or excelfilepath=='' or JIRAPROJECT=='' or filename==''):
+    if (JIRASERVICE=='' or PSWD=='' or USER==''  or excelfilepath=='' or filename==''):
         parser.print_help()
-        print "args: {0}".format(args)
+        #print "args: {0}".format(args)
         sys.exit(2)
 
     # python krono2jira.py -s http://localhost:8080 -u mika.nokka@ambientia.fi -w kissa -q . -n kissa -p kissa
-
-    
     Authenticate(JIRASERVICE,PSWD,USER)
     jira=DoJIRAStuff(USER,PSWD,JIRASERVICE)
     
@@ -131,7 +121,7 @@ def main():
     else:
         logging.debug("User:{0} ---> NO Jira account".format(user,account))
     
-    #############################################################
+    ###########END OF POC CODE ##################################################
     print "EXITING NOW!!"
     sys.exit(5)
     
