@@ -52,7 +52,8 @@ ONCE="NO"
 #CONFIGURATIONS AND EXCEL COLUMN MAPPINGS
 
 DATASTARTSROW=2  # 2 # data section starting line 
-J=10 # this column holds the kronodoc exporter usernames , CHECK ALSO CODE FOR COLUMN USAGE
+J=11 # J=10 this column holds the kronodoc exporter usernames , CHECK ALSO CODE FOR COLUMN USAGE
+#K=11 # other username column
 MainSheet="CCL2"    # HARDCODED SHEET 
 
 
@@ -214,14 +215,16 @@ def main():
             
             
                 
-        time.sleep(0.3) # prevent jira crashing for script attack
+        #time.sleep(0.3) # prevent jira crashing for script attack
         if (ONCE=="YES"):
             print "ONCE testing mode ,stopping now"
             sys.exit(5) #testing do only once
         #print "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
         #now excel has been processed
     
-    wb.save('WITH_ACCOUNT.xlsx')   
+    #wb.save('WITH_ACCOUNT.xlsx')   
+    wb.save('WITH_ACCOUNT_AND_CCS.xlsx')
+    
     end = time.clock()
     totaltime=end-start
     logging.info("\n*************************************************************************")
