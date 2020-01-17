@@ -1,7 +1,13 @@
+#!/usr/bin/python
+# -*- coding: latin-1 -*-
+
 # Uses excel with Kronodoc exported Jira data
 # Changes perosn name to Jira useraccount (or if not exists , uses default jira account)
 # Idea is to make excel Jira import to possible
 # 
+
+
+import os, sys
 
 
 from jira import JIRA
@@ -30,7 +36,7 @@ __version__ = u"0.9.KRONODOC"
 # CODE CONFIGURATIONS
 #####################################################################
 
-logging.basicConfig(level=logging.DEBUG) # IF calling from Groovy, this must be set logging level DEBUG in Groovy side order these to be written out
+logging.basicConfig(level=logging.INFO) # IF calling from Groovy, this must be set logging level DEBUG in Groovy side order these to be written out
 
 # development vs production Jira
 #ENV="DEV"
@@ -45,7 +51,7 @@ ONCE="NO"
 ##################################################
 #CONFIGURATIONS AND EXCEL COLUMN MAPPINGS
 
-DATASTARTSROW=2000  # 2 # data section starting line 
+DATASTARTSROW=2  # 2 # data section starting line 
 J=10 # this column holds the kronodoc exporter usernames
 MainSheet="CCL2"    # HARDCODED SHEET 
 
@@ -129,6 +135,9 @@ def main():
     #    logging.debug("User:{0} ---> Jira Account:{1}".format(user,account))
     #else:
     #    logging.debug("User:{0} ---> NO Jira account".format(user,account))
+    
+    
+    #sys.exit(5)
     
     ###########END OF POC CODE ##################################################
     
@@ -229,6 +238,10 @@ def CheckExcelName(jira,user):
 
    
     result=jira.search_users(user, startAt=0, maxResults=50, includeActive=True, includeInactive=False) #returns dictionary
+    
+    
+    #logging.debug ("WHOLE STUFF:{0}".format(result))
+    
     account ="NOT EXIST"
     # THIS WORKS
     logging.debug ("--------------------------------------------------------------------")
@@ -247,8 +260,8 @@ def CheckExcelName(jira,user):
         match = re.search(regex, user.displayName)
                 
         if (match):
-            firstname=match.group(3)
-            lastname=match.group(1)
+            firstname=match.group(3).encode('utf-8')  # ääkköset off
+            lastname=match.group(1).encode('utf-8')
             account=user.key
             logging.debug ("MATCH FOUND!!   Firstname:{0}   Secondname:{1}".format(firstname,lastname))
             logging.debug ("Has Jira user account: {0}".format(account))
