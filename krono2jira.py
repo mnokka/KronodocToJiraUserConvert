@@ -36,7 +36,7 @@ __version__ = u"0.9.KRONODOC"
 # CODE CONFIGURATIONS
 #####################################################################
 
-logging.basicConfig(level=logging.INFO) # IF calling from Groovy, this must be set logging level DEBUG in Groovy side order these to be written out
+logging.basicConfig(level=logging.DEBUG) # IF calling from Groovy, this must be set logging level DEBUG in Groovy side order these to be written out
 
 # development vs production Jira
 #ENV="DEV"
@@ -52,7 +52,7 @@ ONCE="NO"
 #CONFIGURATIONS AND EXCEL COLUMN MAPPINGS
 
 DATASTARTSROW=2  # 2 # data section starting line 
-J=10 # this column holds the kronodoc exporter usernames
+J=10 # this column holds the kronodoc exporter usernames , CHECK ALSO CODE FOR COLUMN USAGE
 MainSheet="CCL2"    # HARDCODED SHEET 
 
 
@@ -181,13 +181,15 @@ def main():
             
             account=CheckExcelName(jira,THENAME)
             Issues[NAME]["ACCOUNT"] = account
+            CurrentSheet.cell(row=i, column=J).value=account
             
             logging.debug("---------------------------------------------------")
             i=i+1
     
     #print Issues.items() 
   
-  
+#>>> wb = Workbook()
+         
 
 
     for key, value in Issues.iteritems() :
@@ -206,6 +208,7 @@ def main():
         #logging.debug("THENAME:{0}".format(THENAME))
         if (ACCOUNT=="NOT EXIST"):
             logging.info("{0} has NO Jira account".format(THENAME)) 
+            
         else:
             logging.info("{0} --> Jira account: {1}".format(THENAME,ACCOUNT))      
             
@@ -217,7 +220,8 @@ def main():
             sys.exit(5) #testing do only once
         #print "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
         #now excel has been processed
-        
+    
+    wb.save('WITH_ACCOUNT.xlsx')   
     end = time.clock()
     totaltime=end-start
     logging.info("\n*************************************************************************")
